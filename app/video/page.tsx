@@ -11,7 +11,7 @@ const data: DataItem[] = [
     id: 1,
     title: "გიორგი გიორგაძე",
     profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ", // ვიდეო ლინკი
+    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
   },
   {
     id: 2,

@@ -7,15 +7,17 @@ type FormData = {
   lastName: string;
   email: string;
   profession: string;
-  video: FileList;
+  video?: FileList;
   photo: FileList;
-  category: string; // select ველის მნიშვნელობა
+  nominationType: string; // ახალი ველი
+  category: string; // ცალკე ველი
+  myContact?: string;
+  nomineeContact?: string;
 };
 
 export default function MinisterialCandidate() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
-  const [videoName, setVideoName] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState<string | null>(null);
 
   const {
@@ -23,7 +25,10 @@ export default function MinisterialCandidate() {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<FormData>();
+
+  const nominationTypeValue = watch("nominationType");
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
@@ -35,8 +40,12 @@ export default function MinisterialCandidate() {
       formData.append("lastName", data.lastName);
       formData.append("email", data.email);
       formData.append("profession", data.profession);
+      formData.append("nominationType", data.nominationType);
       formData.append("category", data.category);
 
+      if (data.myContact) formData.append("myContact", data.myContact);
+      if (data.nomineeContact)
+        formData.append("nomineeContact", data.nomineeContact);
       if (data.video?.[0]) formData.append("video", data.video[0]);
       if (data.photo?.[0]) formData.append("photo", data.photo[0]);
 
@@ -46,41 +55,41 @@ export default function MinisterialCandidate() {
       });
 
       if (res.ok) {
-        setSuccess("Message sent successfully ✅");
+        setSuccess("გაგზავნა წარმატებით შესრულდა ✅");
         reset();
-        setVideoName(null);
         setPhotoName(null);
       } else {
         const text = await res.text();
-        setSuccess("Failed to send ❌ " + text);
+        setSuccess("გაგზავნა ვერ მოხერხდა ❌ " + text);
       }
     } catch (err) {
-      setSuccess("Error occurred ❌ " + (err as Error).message);
+      setSuccess("შეცდომა ❌ " + (err as Error).message);
     }
     setLoading(false);
   };
 
-  // ✅ ვიდეოს 15 წამზე შემოწმება
-  const validateVideo = (file: File) => {
-    return new Promise<string | true>((resolve) => {
-      const url = URL.createObjectURL(file);
-      const video = document.createElement("video");
-      video.src = url;
-
-      video.onloadedmetadata = () => {
-        URL.revokeObjectURL(url);
-        if (video.duration > 15) {
-          resolve("ვიდეო მაქსიმუმ 15 წამი უნდა იყოს");
-        } else {
-          setVideoName(file.name);
-          resolve(true);
-        }
-      };
-    });
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {/* ნომინირების არჩევა */}
+      <div className="flex flex-col mb-6">
+        <select
+          {...register("nominationType", { required: "აირჩიე ნომინირება." })}
+          className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
+          defaultValue=""
+        >
+          <option value="" disabled>
+            აირჩიე ნომინირება
+          </option>
+          <option value="self">ჩემი ნომინირება</option>
+          <option value="other">სხვისი ნომინირება</option>
+        </select>
+        {errors.nominationType && (
+          <p className="text-red-500 text-sm mt-2">
+            {errors.nominationType.message}
+          </p>
+        )}
+      </div>
+
       {/* სახელი */}
       <div className="flex flex-col mb-6">
         <input
@@ -90,9 +99,7 @@ export default function MinisterialCandidate() {
           className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
         />
         {errors.name && (
-          <p className="text-red-500 text-sm mt-2">
-            {errors.name.message?.toString()}
-          </p>
+          <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>
         )}
       </div>
 
@@ -105,9 +112,7 @@ export default function MinisterialCandidate() {
           className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
         />
         {errors.lastName && (
-          <p className="text-red-500 text-sm mt-2">
-            {errors.lastName.message?.toString()}
-          </p>
+          <p className="text-red-500 text-sm mt-2">{errors.lastName.message}</p>
         )}
       </div>
 
@@ -122,17 +127,53 @@ export default function MinisterialCandidate() {
             },
           })}
           type="email"
-          placeholder="ელ.ფოსტა"
+          placeholder="ელფოსტა"
           className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
         />
         {errors.email && (
-          <p className="text-red-500 text-sm mt-2">
-            {errors.email.message?.toString()}
-          </p>
+          <p className="text-red-500 text-sm mt-2">{errors.email.message}</p>
         )}
       </div>
 
-      {/* Select ველი */}
+      {/* ჩემი საკონტაქტო ნომერი */}
+      {(nominationTypeValue === "self" || nominationTypeValue === "other") && (
+        <div className="flex flex-col mb-6">
+          <input
+            {...register("myContact", {
+              required: "ჩემი საკონტაქტო ნომერი აუცილებელია.",
+            })}
+            type="text"
+            placeholder="ჩემი საკონტაქტო ნომერი"
+            className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
+          />
+          {errors.myContact && (
+            <p className="text-red-500 text-sm mt-2">
+              {errors.myContact.message}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* ნომინირებულის საკონტაქტო */}
+      {nominationTypeValue === "other" && (
+        <div className="flex flex-col mb-6">
+          <input
+            {...register("nomineeContact", {
+              required: "ნომინირებულის საკონტაქტო აუცილებელია.",
+            })}
+            type="text"
+            placeholder="ნომინირებულის საკონტაქტო ნომერი"
+            className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
+          />
+          {errors.nomineeContact && (
+            <p className="text-red-500 text-sm mt-2">
+              {errors.nomineeContact.message}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* კატეგორია */}
       <div className="flex flex-col mb-6">
         <select
           {...register("category", { required: "აირჩიე კატეგორია." })}
@@ -142,16 +183,14 @@ export default function MinisterialCandidate() {
           <option value="" disabled>
             აირჩიე კატეგორია
           </option>
-          <option value="option1">სატესტო 1</option>
-          <option value="option2">სატესტო 2</option>
-          <option value="option3">სატესტო 3</option>
-          <option value="option4">სატესტო 4</option>
-          <option value="option5">სატესტო 5</option>
+          <option value="test1">სატესტო 1</option>
+          <option value="test2">სატესტო 2</option>
+          <option value="test3">სატესტო 3</option>
+          <option value="test4">სატესტო 4</option>
+          <option value="test5">სატესტო 5</option>
         </select>
         {errors.category && (
-          <p className="text-red-500 text-sm mt-2">
-            {errors.category.message?.toString()}
-          </p>
+          <p className="text-red-500 text-sm mt-2">{errors.category.message}</p>
         )}
       </div>
 
@@ -165,7 +204,7 @@ export default function MinisterialCandidate() {
         />
         {errors.profession && (
           <p className="text-red-500 text-sm mt-2">
-            {errors.profession.message?.toString()}
+            {errors.profession.message}
           </p>
         )}
       </div>
@@ -193,37 +232,7 @@ export default function MinisterialCandidate() {
           })}
         />
         {errors.photo && (
-          <p className="text-red-500 text-sm mt-2">
-            {errors.photo.message?.toString()}
-          </p>
-        )}
-      </div>
-
-      {/* ვიდეო */}
-      <div className="flex flex-col mb-6">
-        <label
-          htmlFor="video"
-          className="w-full h-[60px] flex items-center justify-center rounded-lg px-5 border-2 border-[#000] cursor-pointer hover:bg-gray-100 font-bold"
-        >
-          {videoName ? `📹 ${videoName}` : "ვიდეოს ატვირთვა (მაქს. 15 წამი)"}
-        </label>
-        <input
-          id="video"
-          type="file"
-          accept="video/*"
-          className="hidden"
-          {...register("video", {
-            required: "ვიდეოს ატვირთვა აუცილებელია.",
-            validate: {
-              duration: (files) =>
-                files && files[0] ? validateVideo(files[0]) : true,
-            },
-          })}
-        />
-        {errors.video && (
-          <p className="text-red-500 text-sm mt-2">
-            {errors.video.message?.toString()}
-          </p>
+          <p className="text-red-500 text-sm mt-2">{errors.photo.message}</p>
         )}
       </div>
 

@@ -1,5 +1,3 @@
-"use client";
-import React, { useState } from "react";
 import CardItem from "../components/CardItem";
 
 interface DataItem {
@@ -73,7 +71,7 @@ const Page = () => {
           <h1>ძებნა</h1>
         </div>
         <div className="flex gap-8 mt-5 flex-wrap">
-          {data.map((item: any) => (
+          {data.map((item: DataItem) => (
             <CardItem key={item.id} data={item} />
           ))}
         </div>

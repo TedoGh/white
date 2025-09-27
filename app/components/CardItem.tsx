@@ -4,6 +4,13 @@ import person from "../components/person.jpg";
 import Image from "next/image";
 import Modal from "./Modal";
 
+interface DataItem {
+  id: number;
+  title: string;
+  profesia: string;
+  video: string;
+}
+
 const CardItem = ({ data }: any) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   return (

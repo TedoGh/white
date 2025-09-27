@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const videoFile = formData.get("video") as File | null;
 
     // attachments
-    const attachments: any[] = [];
+    const attachments = [];
 
     if (photoFile) {
       attachments.push({

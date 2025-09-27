@@ -11,14 +11,20 @@ interface DataItem {
   video: string;
 }
 
-const CardItem = ({ data }: any) => {
+interface CardItemProps {
+  data: DataItem;
+}
+
+const CardItem = ({ data }: CardItemProps) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
+
+  console.log(data);
   return (
     <div>
       <div
         key={data.id}
         className="w-[400px] h-[400px] border-2 border-black rounded-2xl cursor-pointer"
-        onClick={() => setOpenModal(data)} // გახსნის მოდალს
+        onClick={() => setOpenModal(true)} // გახსნის მოდალს
       >
         <Image
           src={person}

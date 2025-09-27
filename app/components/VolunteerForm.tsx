@@ -15,7 +15,7 @@ type FormData = {
 export default function VolunteerForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
-  const [status, setStatus] = useState(false);
+  // const [status, setStatus] = useState(false);
   const [videoName, setVideoName] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState<string | null>(null);
 
@@ -54,11 +54,11 @@ export default function VolunteerForm() {
         reset();
         setVideoName(null);
         setPhotoName(null);
-        setStatus(true);
+        // setStatus(true);
       } else {
         const text = await res.text();
         setSuccess("Failed to send ❌ " + text);
-        setStatus(false);
+        // setStatus(false);
       }
     } catch (err) {
       setSuccess("Error occurred ❌ " + (err as Error).message);

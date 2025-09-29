@@ -2,7 +2,17 @@
 import { useState } from "react";
 import FaqItem from "./FaqItem";
 
-const Faq = ({ data }: any) => {
+interface FaqData {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  data: FaqData[];
+}
+
+const Faq = ({ data }: Props) => {
   const [showFaq, setShowFaq] = useState<string | null>(null);
 
   const handleClick = (id: string) => {
@@ -10,7 +20,7 @@ const Faq = ({ data }: any) => {
   };
   return (
     <div>
-      {data.map((item: any) => {
+      {data.map((item) => {
         return (
           <FaqItem
             key={item.id}

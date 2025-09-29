@@ -1,30 +1,37 @@
 import Image from "next/image";
 import React from "react";
-import test from "../components/test.png";
+import test from "../components/test.jpg";
 import Button from "./Button";
 const Hero = () => {
   return (
     <div
       className="flex justify-center items-center"
-      style={{ height: "80vh" }}
+      style={{ padding: "0px 0" }}
     >
       <div className="container">
         <div className="mt-6">
           <div>
             <p className="mb-6">
-              Lorem Ipsum საბეჭდი და ტიპოგრაფიული ინდუსტრიის უშინაარსო ტექსტია.
-              იგი სტანდარტად 1500-იანი წლებიდან იქცა, როდესაც უცნობმა მბეჭდავმა
-              ამწყობ დაზგაზე წიგნის საცდელი ეგზემპლარი დაბეჭდა. მისი ტექსტი
-              არამარტო 5 საუკუნის მანძილზე შემორჩა, არამედ მან დღემდე,
-              ელექტრონული ტიპოგრაფიის დრომდეც უცვლელად მოაღწია.
+              ეს ქვეყანა ჩვენია - ერთად გამოვიყვანოთ კრიზისიდან.
             </p>
-            <Image
-              src={test}
-              width={800}
-              height={800}
-              alt=""
-              className="rounded-2xl"
-            />
+            <p className="mb-6">
+              „ანტიკრიზისული პლატფორმა“ აერთიანებს ყველას, ვისაც სჯერა, რომ
+              კრიზისის დაძლევა საქართველოში შესაძლებელია მხოლოდ მოქალაქეთა
+              ჩართულობით, პროფესიონალიზმითა და სისტემური ანტიკრიზისული ხედვით.
+            </p>
+            <p className="mb-6">
+              გაიგე მეტი ჩვენი ინიციატივის შესახებ, გაეცანი და
+              შეუერთდი მანიფესტს.
+            </p>
+            <div className="flex justify-center">
+              <Image
+                src={test}
+                width={600}
+                height={600}
+                alt=""
+                className="rounded-2xl"
+              />
+            </div>
             <div className="mt-4 text-center">
               <Button />
             </div>

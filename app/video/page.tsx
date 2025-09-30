@@ -1,4 +1,5 @@
 import CardItem from "../components/CardItem";
+import Search from "../components/Search";
 
 interface DataItem {
   id: number;
@@ -67,8 +68,8 @@ const Page = () => {
   return (
     <div>
       <div className="container">
-        <div>
-          <h1>ძებნა</h1>
+        <div className="flex justify-center">
+          <Search />
         </div>
         <div className="flex gap-8 mt-5 flex-wrap">
           {data.map((item: DataItem) => (

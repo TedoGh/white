@@ -1,10 +1,5 @@
 import { RiArrowUpSLine, RiArrowDownSLine } from "react-icons/ri";
-
-interface FaqData {
-  id: string;
-  title: string;
-  description: string;
-}
+import { FaqData } from "../types/FaqData";
 
 interface Props {
   data: FaqData;

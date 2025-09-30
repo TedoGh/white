@@ -10,7 +10,7 @@ const Hero = () => {
     >
       <div className="container">
         <div className="mt-6">
-          <div>
+          <div className="text-center">
             <p className="mb-6">
               ეს ქვეყანა ჩვენია - ერთად გამოვიყვანოთ კრიზისიდან.
             </p>

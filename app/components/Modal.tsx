@@ -1,7 +1,5 @@
-"use client";
 import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
-import { useEffect } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 
 type ModalProps = {
@@ -13,14 +11,6 @@ type ModalProps = {
 
 const Modal = ({ isOpen, onClose, title, videoUrl }: ModalProps) => {
   if (!isOpen) return null;
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
 
   return (
     <div

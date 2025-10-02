@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title: "ინიციატივა",
 };
 const page = async () => {
-  const data: any = await getData();
+  const data = await getData();
   const faqData: FaqData[] = await getFaqData();
   return (
     <div>

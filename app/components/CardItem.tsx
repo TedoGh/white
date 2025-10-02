@@ -8,7 +8,7 @@ interface VideoItem {
   _id: string;
   title: string;
   profession: string;
-  photo?: any; // Sanity Image object
+  photo?: string; // Sanity Image object
   videoUrl?: string;
 }
 

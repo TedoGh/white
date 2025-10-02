@@ -1,6 +1,7 @@
 import { client } from "@/lib/sanityClient";
 import { PortableText } from "@portabletext/react";
 import { Metadata } from "next";
+import Link from "next/link";
 
 async function getData() {
   const query = `*[_type == "manifest"] [0] {
@@ -32,6 +33,11 @@ const page = async () => {
               },
             }}
           />
+          <Link href={"/volunteer"}>
+            <button className="text-white bg-black  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer w-full">
+              შემოგვიერთდი
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-// import { EmailTemplate } from "../../components/email-template";
 
-const resend = new Resend("re_YNPDKXwc_KA33Zq5hRWTFYW7bykKZHNBc");
+const resend = new Resend("re_YwsdqRNd_9FrrZqHN6HuiWCH18vuk1Z9n");
 
 export async function POST(req: Request) {
   try {
@@ -12,43 +11,52 @@ export async function POST(req: Request) {
     const lastName = formData.get("lastName")?.toString() || "";
     const email = formData.get("email")?.toString() || "";
     const profession = formData.get("profession")?.toString() || "";
+    const experience = formData.get("experience")?.toString() || "";
 
     const photoFile = formData.get("photo") as File | null;
     const videoFile = formData.get("video") as File | null;
 
-    // attachments
-    const attachments = [];
+    const attachments: {
+      filename: string;
+      content: string;
+      encoding: "base64";
+    }[] = [];
 
     if (photoFile) {
+      const buffer = Buffer.from(await photoFile.arrayBuffer());
       attachments.push({
         filename: photoFile.name,
-        content: Buffer.from(await photoFile.arrayBuffer()),
+        content: buffer.toString("base64"),
+        encoding: "base64",
       });
     }
 
     if (videoFile) {
+      const buffer = Buffer.from(await videoFile.arrayBuffer());
       attachments.push({
         filename: videoFile.name,
-        content: Buffer.from(await videoFile.arrayBuffer()),
+        content: buffer.toString("base64"),
+        encoding: "base64",
       });
     }
 
     const htmlContent = `
-      <h2>New Form Submission</h2>
+      <h2>New Volunteer Form Submission</h2>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Last Name:</strong> ${lastName}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Profession:</strong> ${profession}</p>
+      <p><strong>Experience:</strong> ${experience}</p>
     `;
 
     const data = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
+      from: "ახალი შეტყობინება <chvenia.ge>",
       to: ["ghachavatedo@gmail.com"],
-      subject: "New Contact Form Submission",
-      // react: EmailTemplate({ name, lastName, email, message }),
+      subject: "New Volunteer Application",
       html: htmlContent,
-      attachments,
+      attachments: attachments.length > 0 ? attachments : undefined,
     });
+
     return NextResponse.json({ message: "success", data });
   } catch (error) {
     console.error("Error sending email:", error);

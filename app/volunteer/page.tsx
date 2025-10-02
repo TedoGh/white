@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import VolunteerForm from "../components/VolunteerForm";
 
 export const metadata: Metadata = {
-  title: "მოხალისე",
+  title: "შემოგვიერთდი",
 };
 
 const page = () => {

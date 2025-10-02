@@ -14,7 +14,7 @@ const FaqItem = ({ data, showFaq, onClick }: Props) => {
         <div className="flex justify-between items-center">
           <h1
             onClick={() => onClick(data._id)}
-            className="text-lg cursor-pointer"
+            className="text-base lg:text-lg cursor-pointer"
           >
             {data.title}
           </h1>

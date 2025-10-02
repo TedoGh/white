@@ -53,7 +53,7 @@ const Header = () => {
                   <Link href={"/initiative"}>ინიციატივა</Link>
                 </li>
                 <li>
-                  <Link href={"/video"}>გაგვიცანი</Link>
+                  <Link href={"/video"}>ჩვენ</Link>
                 </li>
                 <li>
                   <Link href={"/upload"}>ატვირთე</Link>

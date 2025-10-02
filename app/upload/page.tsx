@@ -12,7 +12,7 @@ const Page = () => {
         <div className="flex gap-4 flex-col justify-center text-center h-[50vh]">
           <Link href={"/volunteer"}>
             <button className="text-white bg-black  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer w-1/2">
-              მოხალისე
+              შემოგვიერთდი
             </button>
           </Link>
           <Link href={"/ministerial"}>

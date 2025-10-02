@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 type FormData = {
@@ -8,6 +8,7 @@ type FormData = {
   lastName: string;
   email: string;
   profession: string;
+  experience: string;
   video: FileList;
   photo: FileList;
 };
@@ -15,9 +16,11 @@ type FormData = {
 export default function VolunteerForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
-  // const [status, setStatus] = useState(false);
   const [videoName, setVideoName] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState<string | null>(null);
+
+  const photoRef = useRef<HTMLInputElement | null>(null);
+  const videoRef = useRef<HTMLInputElement | null>(null);
 
   const {
     register,
@@ -36,6 +39,7 @@ export default function VolunteerForm() {
       formData.append("lastName", data.lastName);
       formData.append("email", data.email);
       formData.append("profession", data.profession);
+      formData.append("experience", data.experience);
 
       if (data.video?.[0]) {
         formData.append("video", data.video[0]);
@@ -54,11 +58,11 @@ export default function VolunteerForm() {
         reset();
         setVideoName(null);
         setPhotoName(null);
-        // setStatus(true);
+        if (photoRef.current) photoRef.current.value = "";
+        if (videoRef.current) videoRef.current.value = "";
       } else {
         const text = await res.text();
         setSuccess("Failed to send ❌ " + text);
-        // setStatus(false);
       }
     } catch (err) {
       setSuccess("Error occurred ❌ " + (err as Error).message);
@@ -88,7 +92,7 @@ export default function VolunteerForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {/* სახელი და გვარი */}
+      {/* სახელი */}
       <div className="flex flex-col mb-6">
         <input
           {...register("name", { required: "სახელი აუცილებელია." })}
@@ -102,6 +106,8 @@ export default function VolunteerForm() {
           {errors.name.message?.toString()}
         </p>
       )}
+
+      {/* გვარი */}
       <div className="flex flex-col mb-6">
         <input
           {...register("lastName", { required: "გვარი აუცილებელია." })}
@@ -152,6 +158,29 @@ export default function VolunteerForm() {
         </p>
       )}
 
+      {/* გამოცდილება */}
+      <div className="flex flex-col mb-6">
+        <select
+          {...register("experience", { required: "სამუშაო გამოცდილება." })}
+          className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
+          defaultValue=""
+        >
+          <option value="" disabled>
+            სამუშაო გამოცდილება
+          </option>
+          <option value="1-5">1-5 წელი</option>
+          <option value="6-10">6-10 წელი</option>
+          <option value="11-15">11-15 წელი</option>
+          <option value="15-20">15-20 წელი</option>
+          <option value="20+">20 + წელი</option>
+        </select>
+        {errors.experience && (
+          <p className="text-red-500 text-sm mt-2">
+            {errors.experience.message}
+          </p>
+        )}
+      </div>
+
       {/* ფოტო */}
       <div className="flex flex-col mb-6">
         <label
@@ -162,6 +191,7 @@ export default function VolunteerForm() {
         </label>
         <input
           id="photo"
+          // ref={photoRef}
           type="file"
           accept="image/*"
           className="hidden"
@@ -191,6 +221,7 @@ export default function VolunteerForm() {
         </label>
         <input
           id="video"
+          // ref={videoRef}
           type="file"
           accept="video/*"
           className="hidden"
@@ -209,6 +240,7 @@ export default function VolunteerForm() {
         )}
       </div>
 
+      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
@@ -217,7 +249,15 @@ export default function VolunteerForm() {
         {loading ? "იგზავნება..." : "გაგზავნა"}
       </button>
 
-      {success && <p className="mt-4">{success}</p>}
+      {success && (
+        <p
+          className={`mt-4 ${
+            success.includes("✅") ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {success}
+        </p>
+      )}
     </form>
   );
 }

@@ -3,7 +3,7 @@ import { useState } from "react";
 import FaqItem from "./FaqItem";
 
 interface FaqData {
-  id: string;
+  _id: string;
   title: string;
   description: string;
 }
@@ -23,7 +23,7 @@ const Faq = ({ data }: Props) => {
       {data.map((item) => {
         return (
           <FaqItem
-            key={item.id}
+            key={item._id}
             data={item}
             showFaq={showFaq}
             onClick={handleClick}

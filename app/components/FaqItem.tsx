@@ -9,24 +9,27 @@ interface Props {
 
 const FaqItem = ({ data, showFaq, onClick }: Props) => {
   return (
-    <div className="border-t-2 border-b-2 border-[#FFFFFF0F]">
-      <div className="py-6 px-5">
+    <div>
+      <div className="py-3">
         <div className="flex justify-between items-center">
-          <h1 className="text-lg">{data.title}</h1>
-          <div
-            className="w-10 h-10 rounded-full flex justify-center items-center border-2 border-[#FFFFFF0F] cursor-pointer"
-            onClick={() => onClick(data.id)}
+          <h1
+            onClick={() => onClick(data._id)}
+            className="text-lg cursor-pointer"
           >
-            {showFaq === data.id ? (
+            {data.title}
+          </h1>
+          <div
+            className="w-10 h-10 rounded-full flex justify-center items-center border-2 border-[#000] cursor-pointer"
+            onClick={() => onClick(data._id)}
+          >
+            {showFaq === data._id ? (
               <RiArrowUpSLine size={24} />
             ) : (
               <RiArrowDownSLine size={24} />
             )}
           </div>
         </div>
-        {showFaq === data.id && (
-          <p className="mt-4 max-w-[600px]">{data.description}</p>
-        )}
+        {showFaq === data._id && <p className="mt-4">{data.description}</p>}
       </div>
     </div>
   );

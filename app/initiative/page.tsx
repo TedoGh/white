@@ -1,9 +1,11 @@
+import { FaqData } from "../types/FaqData";
+import Faq from "../components/Faq";
 import { client } from "@/lib/sanityClient";
-import { PortableText } from "@portabletext/react";
+import { PortableText, PortableTextBlock } from "@portabletext/react";
 import { Metadata } from "next";
 
 async function getData() {
-  const query = `*[_type == "manifest"] [0] {
+  const query = `*[_type == "initiative"] [0] {
   content
 }
 
@@ -12,11 +14,22 @@ async function getData() {
   return data;
 }
 
+export async function getFaqData() {
+  const query = `*[_type == "faq"] | order(_updatedAt asc) {
+    _id,
+    title,
+    description
+  }`;
+  const data = await client.fetch(query, {}, { cache: "no-store" });
+  return data;
+}
+
 export const metadata: Metadata = {
-  title: "მანიფესტი",
+  title: "ინიციატივა",
 };
 const page = async () => {
-  const data = await getData();
+  const data: any = await getData();
+  const faqData: FaqData[] = await getFaqData();
   return (
     <div>
       <div className="container">
@@ -26,12 +39,12 @@ const page = async () => {
             components={{
               block: {
                 normal: ({ children }) => <p className="mb-6">{children}</p>,
-                h4: ({ children }) => (
-                  <h4 className="font-bold text-xl mb-5">{children}</h4>
-                ),
               },
             }}
           />
+        </div>
+        <div className="mt-10">
+          <Faq data={faqData} />
         </div>
       </div>
     </div>

@@ -1,31 +1,39 @@
 import Image from "next/image";
-import React from "react";
-import test from "../components/test.jpg";
-import Button from "./Button";
-const Hero = () => {
+import Link from "next/link";
+import { client, urlFor } from "@/lib/sanityClient";
+import { PortableText } from "@portabletext/react";
+
+async function getData() {
+  const query = `*[_type == "home"] [0] {
+    "image": image.asset._ref,
+  content,
+  buttonText,
+  buttonLink
+}
+
+`;
+  const data = await client.fetch(query, {}, { cache: "no-store" });
+  return data;
+}
+
+const Hero = async () => {
+  const data = await getData();
   return (
-    <div
-      className="flex justify-center items-center"
-      style={{ padding: "0px 0" }}
-    >
+    <div className="flex justify-center items-center">
       <div className="container">
         <div className="mt-6">
           <div className="text-center">
-            <p className="mb-6">
-              ეს ქვეყანა ჩვენია - ერთად გამოვიყვანოთ კრიზისიდან.
-            </p>
-            <p className="mb-6">
-              „ანტიკრიზისული პლატფორმა“ აერთიანებს ყველას, ვისაც სჯერა, რომ
-              კრიზისის დაძლევა საქართველოში შესაძლებელია მხოლოდ მოქალაქეთა
-              ჩართულობით, პროფესიონალიზმითა და სისტემური ანტიკრიზისული ხედვით.
-            </p>
-            <p className="mb-6">
-              გაიგე მეტი ჩვენი ინიციატივის შესახებ, გაეცანი და
-              შეუერთდი მანიფესტს.
-            </p>
+            <PortableText
+              value={data.content}
+              components={{
+                block: {
+                  normal: ({ children }) => <p className="mb-6">{children}</p>,
+                },
+              }}
+            />
             <div className="flex justify-center">
               <Image
-                src={test}
+                src={urlFor(data.image).url()}
                 width={600}
                 height={600}
                 alt=""
@@ -33,7 +41,14 @@ const Hero = () => {
               />
             </div>
             <div className="mt-4 text-center">
-              <Button />
+              <Link
+                style={{ color: "#0000EE", textDecoration: "underline" }}
+                href={data.buttonLink}
+              >
+                <button className="text-white bg-red-500 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer">
+                  {data.buttonText}
+                </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -1,5 +1,8 @@
 "use client";
-import React from "react";
+import Plyr from "plyr-react";
+import "plyr-react/plyr.css";
+import { useEffect } from "react";
+import { IoCloseOutline } from "react-icons/io5";
 
 type ModalProps = {
   isOpen: boolean;
@@ -10,6 +13,14 @@ type ModalProps = {
 
 const Modal = ({ isOpen, onClose, title, videoUrl }: ModalProps) => {
   if (!isOpen) return null;
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   return (
     <div
@@ -23,9 +34,9 @@ const Modal = ({ isOpen, onClose, title, videoUrl }: ModalProps) => {
         {/* დახურვა */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-xl font-bold text-gray-600 hover:text-black"
+          className="absolute top-3 right-3 text-xl font-bold text-gray-600 hover:text-black cursor-pointer"
         >
-          ✕
+          <IoCloseOutline color="#000" size={24} />
         </button>
 
         {/* სახელი */}
@@ -33,16 +44,19 @@ const Modal = ({ isOpen, onClose, title, videoUrl }: ModalProps) => {
 
         {/* ვიდეო */}
         {videoUrl && (
-          <div className="aspect-video w-full">
-            <iframe
-              width="100%"
-              height="100%"
-              src={videoUrl}
-              title={title}
-              frameBorder="0"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-            ></iframe>
+          <div className="relative w-full">
+            <Plyr
+              source={{
+                type: "video",
+                sources: [
+                  {
+                    src: videoUrl, // პირდაპირი mp4 URL
+                    provider: "html5",
+                  },
+                ],
+              }}
+              controls
+            />
           </div>
         )}
       </div>

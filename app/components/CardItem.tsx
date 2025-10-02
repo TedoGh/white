@@ -1,48 +1,52 @@
 "use client";
 import React, { useState } from "react";
-import person from "../components/person.jpg";
 import Image from "next/image";
 import Modal from "./Modal";
+import { urlFor } from "@/lib/sanityClient";
 
-interface DataItem {
-  id: number;
+interface VideoItem {
+  _id: string;
   title: string;
-  profesia: string;
-  video: string;
+  profession: string;
+  photo?: any; // Sanity Image object
+  videoUrl?: string;
 }
 
-interface CardItemProps {
-  data: DataItem;
-}
+const CardItem = ({ data }: { data: VideoItem }) => {
+  const [openModal, setOpenModal] = useState(false);
 
-const CardItem = ({ data }: CardItemProps) => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
-
-  console.log(data);
   return (
     <div>
       <div
-        key={data.id}
-        className="w-[400px] h-[400px] border-2 border-black rounded-2xl cursor-pointer"
-        onClick={() => setOpenModal(true)} // გახსნის მოდალს
+        key={data._id}
+        className="w-[400px] h-[400px] border-2 border-black rounded-2xl cursor-pointer overflow-hidden"
+        onClick={() => setOpenModal(true)}
       >
-        <Image
-          src={person}
-          width={400}
-          height={400}
-          alt={data.title}
-          className="rounded-t-2xl"
-        />
+        {data.photo ? (
+          <Image
+            src={urlFor(data.photo).url()}
+            width={400}
+            height={400}
+            alt={data.title}
+            className="rounded-t-2xl object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            No Image
+          </div>
+        )}
+
         <div className="p-4">
           <h1 className="font-bold mb-1">{data.title}</h1>
-          <p>{data.profesia}</p>
+          <p>{data.profession}</p>
         </div>
       </div>
+
       <Modal
-        isOpen={!!openModal}
+        isOpen={openModal}
         onClose={() => setOpenModal(false)}
-        title={data?.title}
-        videoUrl={data?.video}
+        title={data.title}
+        videoUrl={data?.videoUrl}
       />
     </div>
   );

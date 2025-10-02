@@ -1,79 +1,30 @@
+import { client } from "@/lib/sanityClient";
 import CardItem from "../components/CardItem";
-import Search from "../components/Search";
+import { Metadata } from "next";
 
-interface DataItem {
-  id: number;
-  title: string;
-  profesia: string;
-  video: string;
+export async function getVideoData() {
+  const query = `*[_type == "video"] {
+  _id,
+  title,
+  "photo": photo.asset._ref,
+  profession,
+ "videoUrl": videoFile.asset->url   
+}`;
+  const data = await client.fetch(query, {}, { cache: "no-store" });
+  return data;
 }
-const data: DataItem[] = [
-  {
-    id: 1,
-    title: "გიორგი გიორგაძე",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  },
-  {
-    id: 2,
-    title: "გიორგი გიორგაძე 2",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/ysz5S6PUM-U",
-  },
-  {
-    id: 3,
-    title: "გიორგი გიორგაძე 3",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  },
-  {
-    id: 4,
-    title: "გიორგი გიორგაძე 4",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  },
-  {
-    id: 5,
-    title: "გიორგი გიორგაძე 5",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  },
-  {
-    id: 6,
-    title: "გიორგი გიორგაძე 6",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  },
-  {
-    id: 7,
-    title: "გიორგი გიორგაძე 7",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  },
-  {
-    id: 8,
-    title: "გიორგი გიორგაძე 8",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  },
-  {
-    id: 9,
-    title: "გიორგი გიორგაძე 9",
-    profesia: "რეჟისორი",
-    video: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  },
-];
 
-const Page = () => {
+export const metadata: Metadata = {
+  title: "გაგციცანი",
+};
+const Page = async () => {
+  const videoData = await getVideoData();
   return (
     <div>
       <div className="container">
-        <div className="flex justify-center">
-          <Search />
-        </div>
         <div className="flex gap-8 mt-5 flex-wrap">
-          {data.map((item: DataItem) => (
-            <CardItem key={item.id} data={item} />
+          {videoData.map((item: any) => (
+            <CardItem key={item._id} data={item} />
           ))}
         </div>
       </div>

@@ -9,8 +9,10 @@ type FormData = {
   profession: string;
   video?: FileList;
   photo: FileList;
-  nominationType: string; // ახალი ველი
-  category: string; // ცალკე ველი
+  nominationType: string; // ნომინაციის ტიპი
+  category: string; // სამინისტრო
+  experience: string; // სამუშაო გამოცდილება
+  message: string; // მიზეზი
   myContact?: string;
   nomineeContact?: string;
 };
@@ -42,6 +44,8 @@ export default function MinisterialCandidate() {
       formData.append("profession", data.profession);
       formData.append("nominationType", data.nominationType);
       formData.append("category", data.category);
+      formData.append("experience", data.experience);
+      formData.append("message", data.message);
 
       if (data.myContact) formData.append("myContact", data.myContact);
       if (data.nomineeContact)
@@ -80,8 +84,8 @@ export default function MinisterialCandidate() {
           <option value="" disabled>
             აირჩიე ნომინირება
           </option>
-          <option value="self">ჩემი ნომინირება</option>
-          <option value="other">სხვისი ნომინირება</option>
+          <option value="self">ვასახელებ ჩემ თავს</option>
+          <option value="other">ვასახელებ სხვას</option>
         </select>
         {errors.nominationType && (
           <p className="text-red-500 text-sm mt-2">
@@ -183,11 +187,35 @@ export default function MinisterialCandidate() {
           <option value="" disabled>
             აირჩიე კატეგორია
           </option>
-          <option value="test1">სატესტო 1</option>
-          <option value="test2">სატესტო 2</option>
-          <option value="test3">სატესტო 3</option>
-          <option value="test4">სატესტო 4</option>
-          <option value="test5">სატესტო 5</option>
+          <option value="test1">საქართველოს საგარეო საქმეთა სამინისტრო</option>
+          <option value="test2">საქართველოს თავდაცვის სამინისტრო</option>
+          <option value="test3">საქართველოს შინაგან საქმეთა სამინისტრო</option>
+          <option value="test4">
+            საქართველოს განათლების, მეცნიერებისა და ახალგაზრდობის სამინისტრო
+          </option>
+          <option value="test5">საქართველოს კულტურის სამინისტრო</option>
+          <option value="test6">
+            საქართველოს ეკონომიკისა და მდგრადი განვითარების სამინისტრო
+          </option>
+          <option value="test7">საქართველოს ფინანსთა სამინისტრო</option>
+          <option value="test8">
+            ოკუპირებული ტერიტორიებიდან დევნილთა, შრომის, ჯანმრთელობისა და
+            სოციალური დაცვის სამინისტრო
+          </option>
+          <option value="test9">საქართველოს იუსტიციის სამინისტრო</option>
+          <option value="test10">
+            საქართველოს გარემოს დაცვისა და სოფლის მეურნეობის სამინისტრო
+          </option>
+          <option value="test11">
+            საქართველოს რეგიონული განვითარებისა და ინფრასტრუქტურის სამინისტრო
+          </option>
+          <option value="test12">
+            შერიგებისა და სამოქალაქო თანასწორობის საკითხებში საქართველოს
+            სახელმწიფო მინისტრის აპარატი
+          </option>
+          <option value="test13">
+            საქართველოს სპორტისა და ახალგაზრდობის საქმეთა სამინისტრო
+          </option>
         </select>
         {errors.category && (
           <p className="text-red-500 text-sm mt-2">{errors.category.message}</p>
@@ -206,6 +234,51 @@ export default function MinisterialCandidate() {
           <p className="text-red-500 text-sm mt-2">
             {errors.profession.message}
           </p>
+        )}
+      </div>
+
+      {/* სამუშაო გამოცდილება */}
+      <div className="flex flex-col mb-6">
+        <select
+          {...register("experience", { required: "სამუშაო გამოცდილება." })}
+          className="w-full h-[60px] rounded-lg px-5 border-2 border-[#000]"
+          defaultValue=""
+        >
+          <option value="" disabled>
+            სამუშაო გამოცდილება
+          </option>
+          <option value="1-5">1-5 წელი</option>
+          <option value="6-10">6-10 წელი</option>
+          <option value="11-15">11-15 წელი</option>
+          <option value="15-20">15-20 წელი</option>
+          <option value="20+">20 + წელი</option>
+        </select>
+        {errors.experience && (
+          <p className="text-red-500 text-sm mt-2">
+            {errors.experience.message}
+          </p>
+        )}
+      </div>
+
+      {/* მესიჯი */}
+      <div className="flex flex-col mb-6">
+        <textarea
+          {...register("message", {
+            required: "მიზეზი აუცილებელია.",
+            minLength: {
+              value: 10,
+              message: "მინ. 10 სიმბოლო.",
+            },
+            maxLength: {
+              value: 500,
+              message: "მაქს. 500 სიმბოლო.",
+            },
+          })}
+          placeholder="რატომ არის კანდიდატი შესაფერისი?"
+          className="w-full h-[190px] py-[18px] px-5 rounded-lg border-2 border-[#000] resize-none"
+        />
+        {errors.message && (
+          <p className="text-red-500 text-sm mt-4">{errors.message.message}</p>
         )}
       </div>
 
@@ -239,7 +312,7 @@ export default function MinisterialCandidate() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full h-[60px] bg-black text-white rounded-lg"
+        className="w-full h-[60px] bg-black text-white rounded-lg cursor-pointer"
       >
         {loading ? "იგზავნება..." : "გაგზავნა"}
       </button>

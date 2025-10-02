@@ -2,6 +2,16 @@
 
 .container {
   max-width: 1320px;
-  padding: 0 15px;
+  padding: 0 25px;
   margin: 0 auto;
+}
+
+a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+ul li a {
+  color: #000;
+  text-decoration: none;
 }

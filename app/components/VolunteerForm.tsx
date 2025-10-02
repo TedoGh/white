@@ -212,7 +212,7 @@ export default function VolunteerForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full h-[60px] bg-black text-white rounded-lg"
+        className="w-full h-[60px] bg-black text-white rounded-lg cursor-pointer"
       >
         {loading ? "იგზავნება..." : "გაგზავნა"}
       </button>

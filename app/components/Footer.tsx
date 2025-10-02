@@ -1,16 +1,8 @@
-import React from "react";
-
 const Footer = () => {
   return (
-    <footer
-      style={{
-        padding: "30px 0",
-        marginTop: "40px",
-        borderTop: "2px solid #000",
-      }}
-    >
+    <footer className="mt-10 py-8 border-t-2 border-black">
       <div className="container">
-        <div className="text-center">2025 ყველა უფლება დაცულია.</div>
+        <div className="text-center italic">2025 ყველა უფლება დაცულია.</div>
       </div>
     </footer>
   );
